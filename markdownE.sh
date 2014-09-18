@@ -1,2 +1,2 @@
 #! /bin/sh
-./src/markdown-extension.scala $@ | markdown
+`dirname $0`/src/markdown-extension.scala $@ | markdown
