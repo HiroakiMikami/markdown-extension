@@ -1,6 +1,6 @@
 #!/bin/sh
-#exec scala -nowarn "$0" "$@"
-exec scala -savecompiled "$0" "$@"
+exec scala -nowarn "$0" "$@"
+#exec scala -savecompiled "$0" "$@"
 !#
 
 /** markdownの拡張プラグイン
@@ -8,28 +8,38 @@ exec scala -savecompiled "$0" "$@"
   * プラグインはhtmlタグごとに拡張を定義することで実行される.
   */
 trait Plugin {
-  def isAddBackslash = true
   def prefix: String = ""
   protected[this] def tag: String
-  protected[this] def convertText(text: scala.xml.Node): String
-  def convert(markdown: scala.xml.Node): Either[String, scala.xml.Node] = {
-    def addBackslash(text: String, c: Char) = { text.replace(s"$c", s"\\$c") }
+  protected[this] def convertTargetedText(tag: String, text: String): String
+  def convert(markdown: String): String = {
+    // 対応するタグを調べて変換する.
+    val startTagExp = "<${tag}(.*)>(.*)".r
+    val endTagExp   = "(.*)</${tag}>(.*)".r
+    
+    def findTag(text: String): String = {
+      text
+    }
+
+    markdown
+
+/*
     // タグが対応タグであるかどうかを調べる.
     if(markdown.label == tag) {
       // 対応するtagである場合
       // 変換の実行
-      val convertResult = convertText(markdown)
+      val convertResult = convertTargetedText(markdown)
 
       if (isAddBackslash) {
         // 各種特殊文字の変更
         /* TODO 特殊文字に<, >を入れる場合, htmlのタグすら変換してしまい, おかしなことになる.*/
-        Left(List('\\', '(', ')', '[', ']', '*', '_').foldLeft(convertResult)((text, c) => addBackslash(text, c)))
+        List('\\', '(', ')', '[', ']', '*', '_').foldLeft(convertResult)((text, c) => addBackslash(text, c))
       } else {
-	Left(convertResult)
+	convertResult
       }
     } else {
-      Right(markdown)
+      markdown
     }
+*/
   }
 }
 
@@ -41,14 +51,19 @@ object LatexPlugin extends Plugin {
   src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 ></script>"""
   val tag: String = "tex"
-  def convertText(text: scala.xml.Node): String = {
-      if(text.toString.lines.length == 1) {
-        // 1行ならば, \(, \)で囲う
-        s"\\(${text.text}\\)"
-      } else {
-        // 1行ならば, \[, \]で囲う
-	s"\\[${text.text}\\]"
-      }
+  def convertTargetedText(tag: String, text: String): String = {
+    def addBackslash(text: String, c: Char) = { text.replace(s"$c", s"\\$c") }
+    // 各種特殊文字の変更
+    /* TODO 特殊文字に<, >を入れる場合, htmlのタグすら変換してしまい, おかしなことになる.*/
+    val textAddedBackslash = List('\\', '(', ')', '[', ']', '*', '_').foldLeft(text)((text, c) => addBackslash(text, c))
+
+    if(textAddedBackslash.lines.length == 1) {
+      // 1行ならば, \(, \)で囲う
+      s"\\(${textAddedBackslash}\\)"
+    } else {
+      // 1行ならば, \[, \]で囲う
+      s"\\[${textAddedBackslash}\\]"
+    }
   }
 }
 
@@ -56,21 +71,18 @@ object LatexPlugin extends Plugin {
 object DotPlugin extends Plugin {
   val tag: String = "dot"
   // TODO engineを取得できるようになると良いかもしれない.
-  def convertText(text: scala.xml.Node): String = {
+  def convertTargetedText(tag: String, text: String): String = {
     // dot言語の取得
-    val dot = text.text
-    Console.err.println(dot)
+    val dot = text
     // svgへの変換
     import scala.sys.process._
     s"echo ${dot}" #| "dot -Tsvg" !! //< TODO 環境依存酷い
   }
-  override def isAddBackslash = false
 }
 // codeプラグイン
 object CodePlugin extends Plugin {
   val tag: String = "code"
-  def convertText(text: scala.xml.Node): String = "<pre>" + text.toString + "</pre>"
-  override def isAddBackslash = false
+  def convertTargetedText(tag: String, text: String): String = s"<pre><${tag}>${text}</code></pre>"
 }
 val pluginList: List[Plugin] = List(LatexPlugin, DotPlugin, CodePlugin)
 
@@ -80,8 +92,15 @@ if (argv.length == 0) {
   exit(1)
 }
 
-// markdownの読み込み.
-val markdownString = "<markdown>" + (scala.io.Source.fromFile(argv(0))).fold("")((str, line) => s"${str}${line}") + "</markdown>"
+// markdownファイルの読み込み.
+val markdownString = (scala.io.Source.fromFile(argv(0))).fold("")((str, line) => s"${str}${line}")
+
+// prefixをつける
+pluginList foreach ((p: Plugin) => println(p.prefix))
+// pluginの適用
+print(pluginList.foldLeft(markdownString)((str, plugin) => plugin.convert(s"${str}")))
+
+/*
 // xmlとして扱う.
 val markdown = scala.xml.XML.loadString(markdownString)
 
@@ -102,6 +121,7 @@ pluginList foreach ((p: Plugin) => println(p.prefix))
    case Left(str) => print(str)
    case Right(node) => print(node)
 }
+*/
 
 
 
