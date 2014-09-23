@@ -8,9 +8,9 @@ UNIX専用. パイプ, echo, dotがコマンドが使える必要がある.
 ### Latex式の埋め込み
 MathJaxを用いた埋め込みをLatex同様に書くことができるようにするもの. 直接MathJaxを用いる場合と異なり, scriptの設定の必要がない, \\や\_の使用時にmarkdown記法が優先されない, という利点がある.
 ```
-<tex>
+%%(tex)
 \frac{a}{b}
-</tex>
+%%
 ```
 が,
 ```
@@ -23,13 +23,17 @@ MathJaxを用いた埋め込みをLatex同様に書くことができるよう�
 ### dotの埋め込み
 dot(graphviz)がsvg形式でhtmlに出力される.
 ```
-<dot>
+%%(dot)
 digragh G {
   a -> b
 }
-</dot>
+%%
 ```
 などのように書く.
 
 ### codeの埋め込み
-\<code\>\</code\>タグだけで, コードを埋め込める.
+```
+%%(code class="lang")
+%%
+```
+によって, コードを埋め込める. class="lang"は省略できる.
