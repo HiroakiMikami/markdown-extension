@@ -1,7 +1,7 @@
 markdown-extension
 ==================
 
-markdownを自分が使いやすいように拡張する.
+markdownを自分が使いやすいように拡張した.
 UNIX専用. パイプ, echo, dotがコマンドが使える必要がある.
 
 ## 現在の拡張
