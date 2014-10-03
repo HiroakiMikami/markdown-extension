@@ -1,6 +1,6 @@
 #!/bin/sh
-exec scala -nowarn "$0" "$@"
-#exec scala -savecompiled "$0" "$@"
+#exec scala -nowarn "$0" "$@"
+exec scala -savecompiled -nowarn "$0" "$@"
 !#
 
 /** markdownの拡張プラグイン
@@ -122,32 +122,11 @@ if (args.length == 0) {
 val markdownString = (scala.io.Source.fromFile(args(0))).fold("")((str, line) => s"${str}${line}")
 
 // prefixをつける
+println("""<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">""")
 pluginList foreach ((p: Plugin) => println(p.prefix))
 // pluginの適用
 print(pluginList.foldLeft(markdownString)((str, plugin) => plugin.convert(s"${str}")))
 
-/*
-// xmlとして扱う.
-val markdown = scala.xml.XML.loadString(markdownString)
-
-// pluginを適用する.
-def applyPlugin(markdown: scala.xml.Node) = {
-    pluginList.foldLeft(Right(markdown): Either[String, scala.xml.Node])(
-	(markdown: Either[String, scala.xml.Node], plugin: Plugin) => markdown match {
-	    case l@Left(_) => l
-	    case Right(node) => plugin.convert(node)
-	}
-    )
-}
-
-// prefixをつける
-pluginList foreach ((p: Plugin) => println(p.prefix))
-// 整形して表示する. ついでにxmlパースのためのmarkdownタグを外す.
-(markdown.child.map(applyPlugin(_))) foreach {
-   case Left(str) => print(str)
-   case Right(node) => print(node)
-}
-*/
 
 
 
