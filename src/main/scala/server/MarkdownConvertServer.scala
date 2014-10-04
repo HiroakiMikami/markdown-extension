@@ -37,6 +37,7 @@ class MarkdownConvertServer(address: InetSocketAddress, markdown: Markdown) {
                 _markdown = _markdown + c.toChar
                 c = out.read()
               }
+	      Console.err.println("[debug] POST request is arrived: " + _markdown)
 
               // htmlに変換する
               val html = markdown toHTML _markdown

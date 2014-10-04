@@ -33,9 +33,11 @@ object MarkdownExtensionMain {
       case "-m" => print(parser.toMarkdown(load(args(1))))
       case "-h" => print(parser.toHTML(load(args(1))))
       case "-s" =>
+        Console.out.println("start Server...")
         server = new MarkdownConvertServer( new InetSocketAddress("localhost" ,8080), parser)
         server.start()
         Console.in.readLine()
+        server.stop()
       case o: String =>
         Console.println("Invalid Option: " + o)
         showHelp()
