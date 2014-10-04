@@ -40,7 +40,7 @@ trait PreExtensionUsingHTMLTag extends PreExtension {
   def apply(attributes: String, text: String): String
 
   /** 対象となるHTMLタグ. */
-  val tag: String
+  def tag: String
 
   override def apply(markdown: String): String = {
     /** HTMLタグ */

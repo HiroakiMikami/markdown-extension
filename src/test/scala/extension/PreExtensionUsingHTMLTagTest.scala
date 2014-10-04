@@ -7,7 +7,7 @@ class PreExtensionUsingHTMLTagTest extends FunSuite {
   test ("apply method should parse markdown as HTML and find targeted Tag") {
     var isCalled = false
     val testTarget = new PreExtensionUsingHTMLTag {
-      def tag: String = "test"
+      val tag: String = "test"
       def apply(attributes: String, text: String): String = {
         assert(attributes == " attr=\"value\"")
         assert(text == "text 1 > 2")
