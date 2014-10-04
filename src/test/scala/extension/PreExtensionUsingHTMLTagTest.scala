@@ -8,11 +8,8 @@ class PreExtensionUsingHTMLTagTest extends FunSuite {
     var isCalled = false
     val testTarget = new PreExtensionUsingHTMLTag {
       def tag: String = "test"
-      def apply(attributes: MetaData, text: String): String = {
-        val list = attributes.toList
-        assert(list.length == 1)
-        assert(list(0).key == "attr")
-        assert(list(0).value.toString == "value")
+      def apply(attributes: String, text: String): String = {
+        assert(attributes == " attr=\"value\"")
         assert(text == "text 1 > 2")
         isCalled = true
         text + text
@@ -26,11 +23,10 @@ class PreExtensionUsingHTMLTagTest extends FunSuite {
       """.stripMargin)
 
     assert(result ==
-      """<body>
+      """
         |out of tag
         |text 1 > 2text 1 > 2
         |out of tag
-        |</body>
       """.stripMargin)
     assert(isCalled)
   }
