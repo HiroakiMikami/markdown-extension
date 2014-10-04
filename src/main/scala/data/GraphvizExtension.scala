@@ -12,9 +12,6 @@ object GraphvizExtension extends extension.PreExtensionUsingHTMLTag {
   /**
     * @todo dotのインストール必須. 非常に環境依存性が強い.
     */
-  def apply(attributes: String, text: String): String = {
-    println("graphviz")
-    s"echo ${text}" #| "dot -Tsvg" !!
-  }
+  def apply(attributes: String, text: String): String = s"echo ${text}" #| "dot -Tsvg" !!
   def tag: String = "dot"
 }

@@ -7,6 +7,7 @@ import java.io.{ByteArrayInputStream, BufferedInputStream}
   *
   * @todo markdownという名前からは, ファイルや文字列を受け取って, toHTML, toMarkdownでtoIntのように変換するほうが適しているのかな.
   *       今の実装なら, MarkdownConverterとかのほうが近そう.
+  * @todo 直接markdownを呼び出す関係上環境依存が強い.
   */
 class Markdown(pre: Iterable[PreExtension], post: Iterable[PostExtension]) {
   def toMarkdown(markdown: String): String = pre.foldLeft(markdown)((markdown, extension) => extension(markdown))

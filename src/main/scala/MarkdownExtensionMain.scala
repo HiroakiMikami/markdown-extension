@@ -1,14 +1,20 @@
+import java.net.InetSocketAddress
 import markdown.Markdown
+import server.MarkdownConvertServer
 
 /** Mainオブジェクト */
 object MarkdownExtensionMain {
   import data._
   private val parser =
-    new Markdown(List(CharacterEncodingExtension, CodeExtension, LatexExtension, GraphvizExtension), List())
+    new Markdown(
+      List(CodeExtension, LatexExtension, GraphvizExtension),
+      List(HeadlineExtension, CharacterEncodingExtension)
+    )
+  private var server: MarkdownConvertServer = null
 
   private def showHelp() =
     Console.println(
-      """Usage: markdownE options markdownFile
+      """Usage: markdownE options [markdownFile]
         |
         |  -m  PreExtensionのみを施したmarkdownを出力する.
         |  -h  すべての拡張を施したHTMLを出力する.
@@ -18,7 +24,7 @@ object MarkdownExtensionMain {
   private def load(fileName: String): String = scala.io.Source.fromFile(fileName).foldLeft("")((str, line) => s"${str}${line}")
 
   def main(args: Array[String]) {
-    if(args.length <= 1) {
+    if(args.length < 1) {
       showHelp()
       System.exit(0)
     }
@@ -26,7 +32,10 @@ object MarkdownExtensionMain {
     args(0) match {
       case "-m" => print(parser.toMarkdown(load(args(1))))
       case "-h" => print(parser.toHTML(load(args(1))))
-      case "-s" => ???
+      case "-s" =>
+        server = new MarkdownConvertServer( new InetSocketAddress("localhost" ,8080), parser)
+        server.start()
+        Console.in.readLine()
       case o: String =>
         Console.println("Invalid Option: " + o)
         showHelp()

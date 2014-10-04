@@ -4,10 +4,10 @@ import scala.xml.Node
 
 /** 文字コードをUTF8と指定する拡張
   *
-  * @todo 本来は, [[extension.PostExtension]]として, headエレメントに追加しないといけないのでは？
+  * @todo headエレメントに追加しているわけではないので, おそらく[[data.HeadlineExtension.]]との適用順によってはうまく働かない.
   */
-object CharacterEncodingExtension extends extension.PreExtension {
-  def apply(markdown: String): String =
+object CharacterEncodingExtension extends extension.PostExtension {
+  def apply(html: String): String =
     s"""<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    |${markdown}""".stripMargin
+    |${html}""".stripMargin
 }
