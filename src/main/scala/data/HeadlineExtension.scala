@@ -39,7 +39,7 @@ object HeadlineExtension extends PostExtension {
       case hTag(prefix, num, title, suffix) =>
         val id = makeId()
         headerList += Header(num.toInt, id, title)
-        html + s"""\n${prefix}<h${num} name="${id}">${title}</h${num}>${suffix}"""
+        html + s"""\n${prefix}<h${num} id="${id}">${title}</h${num}>${suffix}"""
       case _line: String => html+"\n"+_line
     })
 
@@ -63,7 +63,7 @@ object HeadlineExtension extends PostExtension {
     // 表にする.
     s"""<table border=1>
       |<tr>
-      |<td>${list}</td>
+      |<td valign="top">${list}</td>
       |<td>${htmlWithName}</td>
       |</tr>
       |</table>""".stripMargin
