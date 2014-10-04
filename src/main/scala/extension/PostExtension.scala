@@ -6,5 +6,5 @@ trait PostExtension {
     *
     * @param html markdownから変換されたHTML
     */
-  def apply(html: scala.xml.Node): scala.xml.Node
+  def apply(html: String): String
 }

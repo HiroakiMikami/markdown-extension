@@ -8,5 +8,6 @@ import scala.xml.Node
   */
 object CharacterEncodingExtension extends extension.PreExtension {
   def apply(markdown: String): String =
-    """<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">${markdown}"""
+    s"""<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    |${markdown}""".stripMargin
 }
