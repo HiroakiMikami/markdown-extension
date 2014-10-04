@@ -24,7 +24,7 @@ import collection.JavaConversions._
   * extension: extension.PreExtensionUsingHTMLTag{val tag: String} = $anon$1@58bcda24
   *
   * scala> extension("""text1
-  *      | <tag attr=value>text2</tag>
+  *      | &lt;tag attr=value&gt;text2&lt;/tag&gt;
   *      | """)
   * attribute:  attr=value
   * text: text2

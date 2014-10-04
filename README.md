@@ -33,3 +33,11 @@ digragh G {
 
 ### codeの埋め込み
 \<code\>\</code\>タグだけで, コードを埋め込める.
+
+### Headlineの表示
+todo
+
+## メモ
+* util.evalなどを使い, 動的に拡張を渡せるとより便利かもしれないと思った.
+* optionで拡張のon, offができると望ましいかもしれない.
+* Headlineをtableでなく, Javascriptによって実現したほうが良い.
