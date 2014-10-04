@@ -32,8 +32,15 @@ import collection.JavaConversions._
   * <tag>というHTMLタグのエレメントを拡張対象とする場合は, 上記のようにインスタンスを作ればよく, 上のように引数が与えられる.
   */
 trait PreExtensionUsingHTMLTag extends PreExtension {
+  /** 拡張を施した後のHTMLエレメントを返す.
+    *
+    * @param attributes 対象のHTMLタグの属性
+    * @param text 対象のHTMLタグの内部の文章
+    */
   def apply(attributes: String, text: String): String
-  def tag: String
+
+  /** 対象となるHTMLタグ. */
+  val tag: String
 
   override def apply(markdown: String): String = {
     /** HTMLタグ */
@@ -55,8 +62,10 @@ trait PreExtensionUsingHTMLTag extends PreExtension {
       */
     def splitByTag(text: String): Seq[Element] = {
       text match {
-        case beginTag(t1, _attr, t2) if _attr == null => splitByTag(t1) ++ List(Left(BeginTag("")): Element) ++ splitByTag(t2)
-        case beginTag(t1, _attr, t2) if _attr != null => splitByTag(t1) ++ List(Left(BeginTag(_attr)): Element) ++ splitByTag(t2)
+        case beginTag(t1, _attr, t2) if _attr == null =>
+          splitByTag(t1) ++ List(Left(BeginTag("")): Element) ++ splitByTag(t2)
+        case beginTag(t1, _attr, t2) if _attr != null =>
+          splitByTag(t1) ++ List(Left(BeginTag(_attr)): Element) ++ splitByTag(t2)
         case endTag(t1, t2) => splitByTag(t1) ++ List(Left(EndTag): Element) ++ splitByTag(t2)
         case _ => List(Right(text))
       }
