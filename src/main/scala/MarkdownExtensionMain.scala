@@ -7,8 +7,8 @@ object MarkdownExtensionMain {
   import data._
   private val parser =
     new Markdown(
-      List(CodeExtension, LatexExtension, GraphvizExtension),
-      List(HeadlineExtension, CharacterEncodingExtension)
+      List(CodeExtension, LatexExtension.PreExtension, GraphvizExtension),
+      List(HeadlineExtension, CharacterEncodingExtension, LatexExtension.PostExtension)
     )
   private var server: MarkdownConvertServer = null
 
