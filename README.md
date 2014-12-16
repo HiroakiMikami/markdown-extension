@@ -2,7 +2,18 @@ markdown-extension
 ==================
 
 markdownを自分が使いやすいように拡張した.
-パイプ, markdown, echo, cat, dotコマンドが使える必要がある. 基本的にはmarkdown専用
+パイプ, markdown, echo, cat, dotコマンドが使える必要がある. 基本的にはUNIX専用.
+
+## インストール
+```
+$ ./install.sh
+```
+
+## 使い方
+```
+$ emarkdown [<options>] <extended-markdown-file>
+```
+または, 標準入力に, markdownを書き込む.
 
 ## 基本形式
 以下のような形式
