@@ -62,6 +62,21 @@ $code[言語名]{
 }
 ```
 とすると, highlight.jsによってプログラムが可視化される.
+例えば,
+```
+$code[c]{
+  int function(int x, int y) {
+      return x + y;
+  }
+}
+```
+
+### google検索結果へのリンク
+```
+$google{word}
+$google[word]{title}
+```
+どちらも, googleでwordを検索した結果のURLへのリンクを生成する. 後者の場合は, titleという文字列も表示される.
 
 ### tableの埋め込み
 まだ実装できていない.
@@ -69,3 +84,5 @@ $code[言語名]{
 ### Headlineの表示
 見出しを右に表示することができる.
 
+## 拡張の追加方法
+まだ実装できていない.
