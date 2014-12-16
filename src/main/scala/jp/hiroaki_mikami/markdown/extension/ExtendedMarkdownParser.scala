@@ -24,15 +24,19 @@ class ExtendedMarkdownParser(tabWidth: Int) {
     private def bracket(begin: Pattern, end: Pattern): Parser[String] = {
       val str = escapedString(begin.regex + end.regex + "\n")
       begin.str ~> str <~ end.str |
-        (begin.str ~> str ~ bracket(begin, end) ~ str <~ end.str ^^ (x => {
-          x._1._1 + begin.str + x._1._2 + end.str + x._2
+        (begin.str ~> (str ~ bracket(begin, end)).* <~ end.str ^^ (x => {
+          x.foldLeft("")((text, y) => {
+            text + y._1 + begin.str + y._2 + end.str
+          })
         }))
     }
     private def multiLineBracket(begin: Pattern, end: Pattern): Parser[String] = {
       val str = escapedString(begin.regex + end.regex)
       begin.str ~> str <~ end.str |
-        (begin.str ~> str ~ multiLineBracket(begin, end) ~ str <~ end.str ^^ (x => {
-          x._1._1 + begin.str + x._1._2 + end.str + x._2
+        (begin.str ~> (str ~ multiLineBracket(begin, end)).* <~ end.str ^^ (x => {
+          x.foldLeft("")((text, y) => {
+            text + y._1 + begin.str + y._2 + end.str
+          })
         }))
     }
 

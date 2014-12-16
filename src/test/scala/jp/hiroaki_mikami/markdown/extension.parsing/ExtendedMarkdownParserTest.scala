@@ -27,6 +27,7 @@ class ExtendedMarkdownParserTest extends FunSuite {
                      |$text{
                      |  test
                      |}""".stripMargin, Seq(MarkdownText("markdown\n"), Command("text", Seq(), "\n  test\n")))
+    markdownEquals("""test: $test{\\frac{a}{b}}""", Seq(MarkdownText("test: "), Command("test", Seq(), "\\frac{a}{b}")))
   }
 
   test ("parse method should extract parameters") {
