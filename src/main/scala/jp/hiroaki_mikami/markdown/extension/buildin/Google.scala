@@ -1,6 +1,6 @@
 package jp.hiroaki_mikami.markdown.extension.buildin
 
-import jp.hiroaki_mikami.markdown.extension.{Parameter, Extension}
+import jp.hiroaki_mikami.markdown.extension.{ZeroArityParameter, Parameter, Extension}
 import java.net.URLEncoder
 
 /**
@@ -14,6 +14,13 @@ object Google extends Extension {
   }
 
   override def apply(parameters: Seq[Parameter], body: String): String = {
-    s"[$body](${urlInGoogle(body)})\n"
+    parameters collectFirst {
+      case ZeroArityParameter(word) => word
+    } match {
+      case Some(word) =>
+        s"$body [google](${urlInGoogle(word)})\n"
+      case None =>
+        s"[$body](${urlInGoogle(body)})\n"
+    }
   }
 }
