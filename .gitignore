@@ -18,6 +18,9 @@ project/plugins/project/
 
 # intellij idea
 .idea/
+.idea_modules
 
 # emacs
 *~
+
+emarkdown
