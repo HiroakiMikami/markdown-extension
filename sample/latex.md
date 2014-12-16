@@ -1,4 +1,4 @@
-oneline: <tex>\frac{a}{b}</tex>
-<tex>
+oneline: $tex{\frac{a}{b}}
+$tex{
 z = \sqrt{x}
-</tex>
+}
