@@ -2,15 +2,39 @@ markdown-extension
 ==================
 
 markdownを自分が使いやすいように拡張した.
-UNIX専用. パイプ, echo, dotがコマンドが使える必要がある.
+パイプ, markdown, echo, cat, dotコマンドが使える必要がある. 基本的にはmarkdown専用
+
+## 基本形式
+以下のような形式
+```
+$<commandName>[parameters]{ body }
+```
+parametersには, 文字列やJSONを用いることができる. また, bodyは複数行にわたって良い.
+
+例えば,
+```
+$cmd1{ body }
+$cmd2[param1]{ body }
+$cmd3[param1=test]{ body }
+$cmd4[param1="test"]{ body }
+$cmd5[param1="[1, 2, 3]"]{ body }
+$cmd6{
+  multi-line
+  body {
+    internal brackets
+  }
+  \}
+}
+```
+はすべて, 拡張ポイントであると認識される.
 
 ## 現在の拡張
 ### Latex式の埋め込み
-MathJaxを用いた埋め込みをLatex同様に書くことができるようにするもの. 直接MathJaxを用いる場合と異なり, scriptの設定の必要がない, \\や\_の使用時にmarkdown記法が優先されない, という利点がある.
+MathJaxを用いた埋め込みをLatex同様に書くことができるようにするもの. 直接MathJaxを用いる場合と異なり, scriptの設定の必要がないなどの利点はある.
 ```
-<tex>
-\frac{a}{b}
-</tex>
+$tex{
+\\frac{a}{b}
+}
 ```
 が,
 ```
@@ -23,22 +47,25 @@ MathJaxを用いた埋め込みをLatex同様に書くことができるよう�
 ### dotの埋め込み
 dot(graphviz)がsvg形式でhtmlに出力される.
 ```
-<dot>
+$dot{
 digragh G {
   a -> b
 }
-</dot>
+}
 ```
 などのように書く.
 
 ### codeの埋め込み
-\<code\>\</code\>タグだけで, コードを埋め込める.
+```
+$code[言語名]{
+  program
+}
+```
+とすると, highlight.jsによってプログラムが可視化される.
+
+### tableの埋め込み
+まだ実装できていない.
 
 ### Headlineの表示
-todo
+見出しを右に表示することができる.
 
-## メモ
-* util.evalなどを使い, 動的に拡張を渡せるとより便利かもしれないと思った.
-* optionで拡張のon, offができると望ましいかもしれない.
-* Headlineをtableでなく, Javascriptによって実現したほうが良い.
-* PostExtensionをString -> Stringでなく, (Head, Body) -> (Head, Body)にしたほうがprefix追加とかの面で便利
