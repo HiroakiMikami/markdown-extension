@@ -2,7 +2,7 @@ markdown-extension
 ==================
 
 markdownを自分が使いやすいように拡張した.
-パイプ, markdown, echo, cat, dotコマンドが使える必要がある. 基本的にはmarkdown専用
+パイプ, markdown, echo, cat, dotコマンドが使える必要がある. 基本的にはUNIX専用.
 
 ## 基本形式
 以下のような形式
