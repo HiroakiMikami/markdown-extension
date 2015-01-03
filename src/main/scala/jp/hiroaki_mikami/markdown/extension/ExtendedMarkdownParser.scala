@@ -64,7 +64,20 @@ class ExtendedMarkdownParser(tabWidth: Int) {
         (parameter ~ "," ~ seq ^^ (x => Seq(x._1._1) ++ x._2)) | (parameter ^^ (x => Seq(x)))
       "[" ~> seq <~ "]"
     }
-    val body: Parser[String] = multiLineBracket(Pattern("{", "\\{"), Pattern("}", "\\}"))
+    val body: Parser[String] = multiLineBracket(Pattern("{", "\\{"), Pattern("}", "\\}")) ^^ (str => {
+      // 前後の改行は取り除く
+      val t =
+        if (str.startsWith("\n")) {
+          str.drop(1)
+        } else {
+          str
+        }
+      if (t.endsWith("\n")) {
+        t.init
+      } else {
+        t
+      }
+    })
     def command: Parser[Command] =
       ("$" ~> commandName ~ body ^^ (x => Command(x._1, Seq(), x._2))) |
         ("$" ~> commandName ~ parameters ~ body ^^ (x => Command(x._1._1, x._1._2, x._2)))

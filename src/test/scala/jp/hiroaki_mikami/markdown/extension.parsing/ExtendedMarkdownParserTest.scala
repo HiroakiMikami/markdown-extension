@@ -12,7 +12,11 @@ class ExtendedMarkdownParserTest extends FunSuite {
 
   def markdownEquals(text: String, result: Seq[Node]) {
     val markdown = parse(text)
-    assert(markdown.nodes == result)
+
+    assert(result.size == markdown.nodes.size)
+    for ((expected, actual) <- result zip markdown.nodes) {
+      assert(expected == actual)
+    }
   }
 
   test ("parse should extract commandName and body") {
@@ -21,22 +25,20 @@ class ExtendedMarkdownParserTest extends FunSuite {
     markdownEquals("""$text{
                      |  test
                      |  \}
-                     |}""".stripMargin, Seq(Command("text", Seq(), "\n  test\n  }\n")))
+                     |}""".stripMargin, Seq(Command("text", Seq(), "  test\n  }")))
 
     markdownEquals("""markdown
                      |$text{
                      |  test
-                     |}""".stripMargin, Seq(MarkdownText("markdown\n"), Command("text", Seq(), "\n  test\n")))
+                     |}""".stripMargin, Seq(MarkdownText("markdown\n"), Command("text", Seq(), "  test")))
     markdownEquals("""test: $test{\\frac{a}{b}}""", Seq(MarkdownText("test: "), Command("test", Seq(), "\\frac{a}{b}")))
     markdownEquals(
       """$code{
         |    void function() {
         |    }
         |}""".stripMargin, Seq(Command("code", Seq(),
-        """
-          |    void function() {
-          |    }
-          |""".stripMargin)))
+        """    void function() {
+          |    }""".stripMargin)))
   }
 
   test ("parse method should extract parameters") {
@@ -51,8 +53,25 @@ class ExtendedMarkdownParserTest extends FunSuite {
           OneArityParameter("p2", JsString("arg")),
           OneArityParameter("p3", Json.obj("json"->"value", "arr"->Json.arr(1, 2, 3)))
         ),
-        "\n  test\n"
+        "  test"
       ))
     )
+  }
+
+  test ("test bug of 2014/1/3") {
+    markdownEquals(
+      """$code[scala]{
+        |def restructured(urls: Seq[String]) = {
+        |  while(tree != treeOld) {
+        |  }
+        |}
+        |}""".stripMargin,
+      Seq(Command(
+        "code",
+        Seq(ZeroArityParameter("scala")),
+        """def restructured(urls: Seq[String]) = {
+          |  while(tree != treeOld) {
+          |  }
+          |}""".stripMargin)))
   }
 }
