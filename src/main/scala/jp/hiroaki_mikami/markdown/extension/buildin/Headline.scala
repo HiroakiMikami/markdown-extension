@@ -36,12 +36,13 @@ object Headline extends Extension {
     case class Header(num: Int, id: Int, title: String)
     var headerList = scala.collection.mutable.ListBuffer[Header]()
 
-    val htmlWithName = html.body.lines.foldLeft("")((html, line) => line match {
+    val htmlWithName: String = html.body.lines.foldLeft("")((html, line) => line match {
       case hTag(prefix, num, title, suffix) =>
         val id = makeId()
         headerList += Header(num.toInt, id, title)
         html + s"""\n$prefix<h$num id="$id">$title</h$num>$suffix"""
-      case _line: String => html+"\n"+_line
+      case _line: String =>
+        html+"\n"+_line
     })
 
     def indent(depth: Int): String = {
@@ -117,7 +118,7 @@ object Headline extends Extension {
         |$list
         |</div>
         |<div class="body">
-        |${html.body}
+        |$htmlWithName
         |</div>
         |""".stripMargin)
   }

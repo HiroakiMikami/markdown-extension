@@ -84,12 +84,12 @@ class Headline$Test extends FunSuite {
         |
         |</div>
         |<div class="body">
-        |<h1>Title(1)</h1>
-        |<h2>Title(1-1)</h2>
-        |<h1>Title(2)</h1>
-        |<h2>Title(2-1)</h2>
-        |<h2>Title(2-2)</h2>
         |
+        |<h1 id="1">Title(1)</h1>
+        |<h2 id="2">Title(1-1)</h2>
+        |<h1 id="3">Title(2)</h1>
+        |<h2 id="4">Title(2-1)</h2>
+        |<h2 id="5">Title(2-2)</h2>
         |</div>
         |""".stripMargin)
     assert(actual.head == expected.head)
